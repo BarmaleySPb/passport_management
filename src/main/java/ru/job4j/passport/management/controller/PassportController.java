@@ -2,8 +2,10 @@ package ru.job4j.passport.management.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.passport.management.model.OwnerDTO;
 import ru.job4j.passport.management.model.Passport;
 import ru.job4j.passport.management.model.PassportDTO;
+import ru.job4j.passport.management.service.OwnerService;
 import ru.job4j.passport.management.service.PassportService;
 
 import javax.validation.Valid;
@@ -12,9 +14,11 @@ import javax.validation.Valid;
 @RequestMapping("/passport")
 public class PassportController {
     private final PassportService passportService;
+    private final OwnerService ownerService;
 
-    public PassportController(PassportService passportService) {
+    public PassportController(PassportService passportService, OwnerService ownerService) {
         this.passportService = passportService;
+        this.ownerService = ownerService;
     }
 
     @GetMapping("/find")
@@ -23,29 +27,33 @@ public class PassportController {
     }
 
     @GetMapping("/find/{series}")
-    public Iterable<Passport> findBySeries(@PathVariable String series) {
+    public Iterable<Passport> findBySeries(@PathVariable int series) {
         return passportService.findBySeries(series);
     }
 
     @PostMapping("/save")
     public ResponseEntity<Void> create(@Valid @RequestBody PassportDTO passportDTO) {
-        checkSeriesAndNumber(passportDTO);
-        Passport passport = Passport.of(passportDTO.getSeries(), passportDTO.getNumber());
+        ownerService.save(passportDTO.getOwner());
+        Passport passport = Passport.of(
+                Integer.parseInt(passportDTO.getSeries()),
+                Integer.parseInt(passportDTO.getNumber()), passportDTO.getOwner()
+        );
         this.passportService.save(passport);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Void> update(@PathVariable long id, @Valid @RequestBody PassportDTO passportDTO) {
-        checkId(id);
-        checkSeriesAndNumber(passportDTO);
-        passportService.updatePassport(passportDTO.getSeries(), passportDTO.getNumber(), id);
+    public ResponseEntity<Void> update(@PathVariable long id, @Valid @RequestBody OwnerDTO ownerDTO) {
+        Passport passportForUpdate = passportService.findById(id);
+        String firstName = ownerDTO.getFirstName();
+        String secondName = ownerDTO.getSecondName();
+        long ownerId = passportForUpdate.getOwner().getId();
+        ownerService.updateData(firstName, secondName, ownerId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        checkId(id);
         Passport passport = new Passport();
         passport.setId(id);
         passportService.delete(passport);
@@ -54,24 +62,11 @@ public class PassportController {
 
     @GetMapping("/unavailable")
     public Iterable<Passport> unavailable() {
-        return passportService.getExpired();
+        return passportService.findExpiredPassports();
     }
 
     @GetMapping("/find-replaceable")
     public Iterable<Passport> needReplace() {
-        return passportService.getForReplace();
-    }
-
-    private void checkId(long id) {
-        if (passportService.findById(id).isEmpty()) {
-            throw new IllegalArgumentException("Passport whit id: " + id + " not exists");
-        }
-    }
-
-    private void checkSeriesAndNumber(PassportDTO passportDTO) {
-        if (passportService.findBySeriesAndNumber(passportDTO.getSeries(), passportDTO.getNumber()).isPresent()) {
-            throw new IllegalArgumentException("Passport with series: " + passportDTO.getSeries()
-                    + " and number: " + passportDTO.getNumber() + " already exist");
-        }
+        return passportService.findPassportsForReplace();
     }
 }

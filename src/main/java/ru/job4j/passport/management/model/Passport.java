@@ -4,36 +4,58 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "UniqueSeriesAndNumber", columnNames = {"series", "number"})
+})
 public class Passport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull(message = "Id must not be null")
     private long id;
-    @Pattern(regexp = "^\\d{4}$", message = "Passport series must consist of only four digits")
-    private String series;
-    @Pattern(regexp = "^\\d{6}$", message = "Passport number must consist of only six digits")
-    private String number;
+    @Min(value = 1, message = "Passport series must be in range from 1 to 9999")
+    @Max(9999)
+    private int series;
+    @Min(value = 1, message = "Passport number must be in range from 1 to 999999")
+    @Max(999999)
+    private int number;
     private LocalDate dateOfIssue;
     private LocalDate expiryDate;
+    @OneToOne
+    private Owner owner;
 
     public Passport() {
     }
 
-    public static Passport of(String series, String number) {
+    public static Passport of(int series, int number, Owner owner) {
         Passport passport = new Passport();
         passport.setSeries(series);
         passport.setNumber(number);
-        passport.setDateOfIssue(LocalDate.now());
-        passport.setExpiryDate(LocalDate.now().plusYears(10));
+        LocalDate now = LocalDate.now();
+        passport.setOwner(owner);
+        passport.setDateOfIssue(now);
+        passport.setExpiryDate(setExpiryDate(now, owner.getBirthDate()));
         return passport;
+    }
+
+    private static LocalDate setExpiryDate(LocalDate now, LocalDate birthDate) {
+        LocalDate expDate;
+        LocalDate minusTwenty = now.minusYears(20);
+        LocalDate minusFortyFive = now.minusYears(45);
+        if (birthDate.isAfter(minusTwenty)) {
+            expDate = birthDate.plusYears(20);
+        } else if (birthDate.isBefore(minusTwenty) && birthDate.isAfter(minusFortyFive)) {
+            expDate = birthDate.plusYears(45);
+        } else {
+            expDate = now.plusYears(199);
+        }
+        return expDate;
     }
 
     @Override
@@ -45,12 +67,12 @@ public class Passport {
             return false;
         }
         Passport passport = (Passport) o;
-        return id == passport.id;
+        return id == passport.id && series == passport.series && number == passport.number;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, series, number);
     }
 
     @Override

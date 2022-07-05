@@ -12,4 +12,5 @@ public class PassportDTO {
     private String series;
     @Pattern(regexp = "^\\d{6}$", message = "Passport number must consist of only six digits")
     private String number;
+    Owner owner;
 }
