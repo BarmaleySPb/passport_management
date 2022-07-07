@@ -9,7 +9,9 @@ import java.util.Optional;
 public interface PassportRepository extends CrudRepository<Passport, Long> {
 
     Iterable<Passport> findBySeries(int series);
+
     Optional<Passport> findBySeriesAndNumber(int series, int number);
+
     Optional<Passport> findById(long id);
 
     @Query(value = "select * from passport p where p.expiry_date < current_date",

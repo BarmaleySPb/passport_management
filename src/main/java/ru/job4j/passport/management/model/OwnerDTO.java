@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class OwnerDTO {
     @NotBlank
-    String firstName;
+    private String firstName;
     @NotBlank
-    String secondName;
+    private String secondName;
 }

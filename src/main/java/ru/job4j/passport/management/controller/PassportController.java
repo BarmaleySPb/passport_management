@@ -43,7 +43,8 @@ public class PassportController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Void> update(@PathVariable long id, @Valid @RequestBody OwnerDTO ownerDTO) {
+    public ResponseEntity<Void> update(@PathVariable long id,
+                                       @Valid @RequestBody OwnerDTO ownerDTO) {
         Passport passportForUpdate = passportService.findById(id);
         String firstName = ownerDTO.getFirstName();
         String secondName = ownerDTO.getSecondName();

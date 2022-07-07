@@ -43,7 +43,9 @@ public class PassportService {
         int series = passport.getSeries();
         int number = passport.getNumber();
         if (findBySeriesAndNumber(series, number).isPresent()) {
-            throw new IllegalArgumentException("Passport " + series + " " + number + " already exists");
+            throw new IllegalArgumentException(
+                    "Passport " + series + " " + number + " already exists"
+            );
         }
         passportRepository.save(passport);
     }

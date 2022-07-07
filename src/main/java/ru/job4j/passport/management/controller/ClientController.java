@@ -47,7 +47,8 @@ public class ClientController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Void> update(@PathVariable long id, @Valid @RequestBody PassportDTO passportDTO) {
+    public ResponseEntity<Void> update(@PathVariable long id,
+                                       @Valid @RequestBody PassportDTO passportDTO) {
         restTemplate.put(endpoint + "/update/" + id, passportDTO);
         return ResponseEntity.ok().build();
     }

@@ -16,10 +16,10 @@ import java.util.Objects;
 public class Owner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
-    String firstName;
-    String secondName;
-    LocalDate birthDate;
+    private long id;
+    private String firstName;
+    private String secondName;
+    private LocalDate birthDate;
 
     public Owner() {
     }
