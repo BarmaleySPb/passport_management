@@ -17,6 +17,12 @@
     <!-- See http://checkstyle.sf.net/config_sizes.html -->
     <module name="FileLength"/>
 
+    <!-- Checks for single line comments.               -->
+    <module name="RegexpSingleline">
+        <property name="format" value="^\s+[\/]{2}.+$|^.+\s+[\/]{2}.+$|^[\/]{2}.+$|^[\/]{2}$" />
+        <property name="message" value="Delete single line comment, and change for JavaDoc." />
+    </module>
+
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
         <property name="max" value="100"/>
