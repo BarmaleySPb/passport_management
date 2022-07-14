@@ -19,7 +19,7 @@
 
     <!-- Checks for single line comments.               -->
     <module name="RegexpSingleline">
-        <property name="format" value="^\s+[\/]{2}.+$|^.+\s+[\/]{2}.+$|^[\/]{2}.+$|^[\/]{2}$" />
+        <property name="format" value="^\s+[/]{2}.+$|^.+\s+[/]{2}.+$|^[/]{2}.+$|^[/]{2}$|^\s+[/]{2}$" />
         <property name="message" value="Delete single line comment, and change for JavaDoc." />
     </module>
 
