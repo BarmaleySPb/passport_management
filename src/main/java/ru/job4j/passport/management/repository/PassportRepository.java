@@ -4,11 +4,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import ru.job4j.passport.management.model.Passport;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PassportRepository extends CrudRepository<Passport, Long> {
 
-    Iterable<Passport> findBySeries(int series);
+    List<Passport> findBySeries(int series);
 
     Optional<Passport> findBySeriesAndNumber(int series, int number);
 

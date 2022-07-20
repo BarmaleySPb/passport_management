@@ -6,11 +6,11 @@ import ru.job4j.passport.management.model.Passport;
 import ru.job4j.passport.management.repository.OwnerRepository;
 import ru.job4j.passport.management.repository.PassportRepository;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class PassportService {
 
     private final PassportRepository passportRepository;
@@ -25,7 +25,7 @@ public class PassportService {
         return passportRepository.findAll();
     }
 
-    public Iterable<Passport> findBySeries(int series) {
+    public List<Passport> findBySeries(int series) {
         return passportRepository.findBySeries(series);
     }
 
@@ -33,12 +33,11 @@ public class PassportService {
         return passportRepository.findBySeriesAndNumber(series, number);
     }
 
-    public Passport findById(long id) {
-        return passportRepository.findById(id).orElseThrow(
-                () -> new NoSuchElementException("Passport with id: " + id + " not found")
-        );
+    public Optional<Passport> findById(long id) {
+        return passportRepository.findById(id);
     }
 
+    @Transactional
     public void save(Passport passport) {
         int series = passport.getSeries();
         int number = passport.getNumber();
@@ -46,12 +45,18 @@ public class PassportService {
             throw new IllegalArgumentException(
                     "Passport " + series + " " + number + " already exists"
             );
+        } else {
+            ownerRepository.save(passport.getOwner());
         }
         passportRepository.save(passport);
     }
 
+    @Transactional
     public void delete(Passport passport) {
-        Passport passportForDelete = findById(passport.getId());
+        long id = passport.getId();
+        Passport passportForDelete = findById(id).orElseThrow(
+                () -> new NoSuchElementException("Passport with id: " + id + " not found.")
+        );
         passportRepository.delete(passportForDelete);
         ownerRepository.delete(passportForDelete.getOwner());
     }

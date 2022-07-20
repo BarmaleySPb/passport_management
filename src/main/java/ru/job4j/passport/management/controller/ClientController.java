@@ -23,7 +23,7 @@ public class ClientController {
     }
 
     @GetMapping("/find/{series}")
-    public Iterable<Passport> findBySeries(@PathVariable String series) {
+    public Iterable<Passport> findBySeries(@PathVariable int series) {
         return clientPassportService.findBySeries(series);
     }
 
