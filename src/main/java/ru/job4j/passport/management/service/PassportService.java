@@ -33,8 +33,10 @@ public class PassportService {
         return passportRepository.findBySeriesAndNumber(series, number);
     }
 
-    public Optional<Passport> findById(long id) {
-        return passportRepository.findById(id);
+    public Passport findById(long id) {
+        return passportRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Passport with id: " + id + " not found.")
+        );
     }
 
     @Transactional
@@ -45,18 +47,15 @@ public class PassportService {
             throw new IllegalArgumentException(
                     "Passport " + series + " " + number + " already exists"
             );
-        } else {
-            ownerRepository.save(passport.getOwner());
         }
+        ownerRepository.save(passport.getOwner());
         passportRepository.save(passport);
     }
 
     @Transactional
     public void delete(Passport passport) {
         long id = passport.getId();
-        Passport passportForDelete = findById(id).orElseThrow(
-                () -> new NoSuchElementException("Passport with id: " + id + " not found.")
-        );
+        Passport passportForDelete = findById(id);
         passportRepository.delete(passportForDelete);
         ownerRepository.delete(passportForDelete.getOwner());
     }

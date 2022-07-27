@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
+import ru.job4j.passport.management.model.OwnerDTO;
 import ru.job4j.passport.management.model.Passport;
 import ru.job4j.passport.management.model.PassportDTO;
 
@@ -36,14 +37,9 @@ public class ClientPassportService {
 
     public Iterable<Passport> findBySeries(@PathVariable int series) {
         Iterable<Passport> passports;
-        try {
-            passports = restTemplate.exchange(endpoint + "/find/" + series,
-                    HttpMethod.GET, null,
-                    new ParameterizedTypeReference<Iterable<Passport>>() { }).getBody();
-        } catch (HttpClientErrorException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Passports with series: " + series + " not found.");
-        }
+        passports = restTemplate.exchange(endpoint + "/find/" + series,
+                HttpMethod.GET, null,
+                new ParameterizedTypeReference<Iterable<Passport>>() { }).getBody();
         return passports;
     }
 
@@ -60,12 +56,12 @@ public class ClientPassportService {
     }
 
     public ResponseEntity<Void> update(@PathVariable long id,
-                                       @Valid @RequestBody PassportDTO passportDTO) {
+                                       @Valid @RequestBody OwnerDTO ownerDTO) {
         try {
-            restTemplate.put(endpoint + "/update/" + id, passportDTO);
+            restTemplate.put(endpoint + "/update/" + id, ownerDTO);
         } catch (HttpClientErrorException.NotFound e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Passports with id: " + id + " not found.");
+                    "Passport with id: " + id + " not found.");
         }
         return ResponseEntity.ok().build();
     }
@@ -75,7 +71,7 @@ public class ClientPassportService {
             restTemplate.delete(endpoint + "/delete/{id}", id);
         } catch (HttpClientErrorException.NotFound e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Passports with id: " + id + " not found.");
+                    "Passport with id: " + id + " not found.");
         }
         return ResponseEntity.ok().build();
     }

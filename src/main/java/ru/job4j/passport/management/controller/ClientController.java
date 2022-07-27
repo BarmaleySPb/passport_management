@@ -2,6 +2,7 @@ package ru.job4j.passport.management.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.passport.management.model.OwnerDTO;
 import ru.job4j.passport.management.model.Passport;
 import ru.job4j.passport.management.model.PassportDTO;
 import ru.job4j.passport.management.service.ClientPassportService;
@@ -34,8 +35,8 @@ public class ClientController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Void> update(@PathVariable long id,
-                                       @Valid @RequestBody PassportDTO passportDTO) {
-        return clientPassportService.update(id, passportDTO);
+                                       @Valid @RequestBody OwnerDTO ownerDTO) {
+        return clientPassportService.update(id, ownerDTO);
     }
 
     @DeleteMapping("/delete/{id}")

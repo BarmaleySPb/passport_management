@@ -19,10 +19,12 @@ public class Passport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull(message = "Id must not be null")
     private long id;
-    @Min(value = 1, message = "Passport series must be in range from 1 to 9999")
+    @Min(value = 1, message = "Passport series must be in range from 0001 "
+            + "to 9999 and consist of four digits")
     @Max(9999)
     private int series;
-    @Min(value = 1, message = "Passport number must be in range from 1 to 999999")
+    @Min(value = 1, message = "Passport number must be in range from 000001 "
+            + "to 999999 and consist of six digits")
     @Max(999999)
     private int number;
     private LocalDate dateOfIssue;

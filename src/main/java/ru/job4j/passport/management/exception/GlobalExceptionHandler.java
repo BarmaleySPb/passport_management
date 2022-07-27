@@ -1,4 +1,4 @@
-package ru.job4j.passport.management.exeption;
+package ru.job4j.passport.management.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {NoSuchElementException.class})
-    public ResponseEntity<?> handleException1(Exception e) {
+    public ResponseEntity<?> handleNoSuchElementException(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
-    public ResponseEntity<?> handleException2(Exception e) {
+    public ResponseEntity<?> handleIllegalArgumentException(Exception e) {
         return ResponseEntity
                 .badRequest()
                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -32,7 +32,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handle(MethodArgumentNotValidException e) {
+    public ResponseEntity<?> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(
                 e.getFieldErrors().stream()
                         .map(f -> Map.of(

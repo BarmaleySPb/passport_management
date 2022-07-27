@@ -8,8 +8,8 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class OwnerDTO {
-    @NotBlank
+    @NotBlank(message = "Firstname must not be blank")
     private String firstName;
-    @NotBlank
+    @NotBlank(message = "Surname must not be blank")
     private String secondName;
 }
