@@ -6,7 +6,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import ru.job4j.passport.management.model.Owner;
 
+import java.util.Optional;
+
 public interface OwnerRepository extends CrudRepository<Owner, Long> {
+    Optional<Owner> findById(long id);
+
     @Modifying
     @Query(value = "update owner set first_name = :firstName, second_name = :secondName"
             + " where id = :id", nativeQuery = true)

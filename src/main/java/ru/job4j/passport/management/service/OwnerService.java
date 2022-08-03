@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.job4j.passport.management.model.Owner;
 import ru.job4j.passport.management.repository.OwnerRepository;
 
+import java.util.NoSuchElementException;
+
 @Service
 @Transactional
 public class OwnerService {
@@ -12,6 +14,12 @@ public class OwnerService {
 
     public OwnerService(OwnerRepository ownerRepository) {
         this.ownerRepository = ownerRepository;
+    }
+
+    public Owner findById(long id) {
+        return ownerRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Owner with id: " + id + " not found.")
+        );
     }
 
     public void save(Owner owner) {

@@ -3,6 +3,7 @@ package ru.job4j.passport.management.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.passport.management.model.Owner;
 import ru.job4j.passport.management.model.OwnerDTO;
 import ru.job4j.passport.management.model.Passport;
 import ru.job4j.passport.management.model.PassportDTO;
@@ -52,8 +53,8 @@ public class PassportController {
         passportForUpdate = passportService.findById(id);
         String firstName = ownerDTO.getFirstName();
         String secondName = ownerDTO.getSecondName();
-        long ownerId = passportForUpdate.getOwner().getId();
-        ownerService.updateData(firstName, secondName, ownerId);
+        Owner ownerForUpdate = ownerService.findById(passportForUpdate.getOwner().getId());
+        ownerService.updateData(firstName, secondName, ownerForUpdate.getId());
         return ResponseEntity.ok().build();
     }
 
