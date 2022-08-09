@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=passport_management
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - ./db/passport_management/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+  app:
+    image: passport_management
+    container_name: passport_management
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/passport_management
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
