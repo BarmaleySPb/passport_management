@@ -17,7 +17,7 @@ Screenshots of the application:
    git clone https://github.com/BarmaleySPb/passport_management   
 2) Go to the project, build the project:
    ```
-   cd ~/passport_management
+   cd ./passport_management
    mvn install
 3) Create image:
     ```
