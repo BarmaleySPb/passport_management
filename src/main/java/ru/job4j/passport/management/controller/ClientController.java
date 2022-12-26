@@ -1,13 +1,12 @@
 package ru.job4j.passport.management.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.passport.management.model.OwnerDTO;
 import ru.job4j.passport.management.model.Passport;
 import ru.job4j.passport.management.model.PassportDTO;
 import ru.job4j.passport.management.service.ClientPassportService;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/client")

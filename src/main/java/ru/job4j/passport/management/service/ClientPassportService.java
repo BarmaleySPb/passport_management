@@ -1,5 +1,6 @@
 package ru.job4j.passport.management.service;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -14,8 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.passport.management.model.OwnerDTO;
 import ru.job4j.passport.management.model.Passport;
 import ru.job4j.passport.management.model.PassportDTO;
-
-import javax.validation.Valid;
 
 @Service
 public class ClientPassportService {
